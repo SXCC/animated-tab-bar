@@ -252,6 +252,17 @@ open class RAMAnimatedTabBarController: UITabBarController {
     
     self.initializeContainers()
   }
+    
+    var customButtons = [UIView]()
+    
+    override open func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        for subView in tabBar.subviews {
+            if !customButtons.contains(subView) {
+                subView.isHidden = true
+            }
+        }
+    }
   
   fileprivate func initializeContainers() {
     if !self.didInit || !self.didLoadView {
@@ -259,6 +270,10 @@ open class RAMAnimatedTabBarController: UITabBarController {
     }
     
     let containers = self.createViewContainers()
+    customButtons = [UIView]()
+    for item in containers.allValues {
+        customButtons.append(item as! UIView)
+    }
     
     self.createCustomIcons(containers)
   }
@@ -405,7 +420,8 @@ open class RAMAnimatedTabBarController: UITabBarController {
     viewContainer.backgroundColor = UIColor.clear // for test
     viewContainer.translatesAutoresizingMaskIntoConstraints = false
     viewContainer.isExclusiveTouch = true
-    view.addSubview(viewContainer)
+//    view.addSubview(viewContainer)
+    tabBar.addSubview(viewContainer)
     
     // add gesture
     let tapGesture = UITapGestureRecognizer(target: self, action: #selector(RAMAnimatedTabBarController.tapHandler(_:)))
@@ -413,7 +429,8 @@ open class RAMAnimatedTabBarController: UITabBarController {
     viewContainer.addGestureRecognizer(tapGesture)
     
     // add constrains
-    viewContainer.bottomAnchor.constraint(equalTo: bottomLayoutGuide.topAnchor).isActive = true
+//    viewContainer.bottomAnchor.constraint(equalTo: bottomLayoutGuide.topAnchor).isActive = true
+    viewContainer.centerYAnchor.constraint(equalTo: tabBar.centerYAnchor).isActive = true
     
     let constH = NSLayoutConstraint(item: viewContainer,
                                     attribute: NSLayoutAttribute.height,
